@@ -1,0 +1,35 @@
+@import "tailwindcss" source(".");
+
+@theme {
+  --color-sb-charcoal: #1a1a1a;
+  --color-sb-gold: #c9a227;
+  --color-sb-gold-dark: #a8841f;
+  --color-sb-cream: #f5f0e8;
+  --color-sb-brown: #3d2b1f;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
+}
+
+@layer base {
+  body {
+    @apply bg-sb-cream text-sb-charcoal font-sans antialiased;
+  }
+}
+
+@layer components {
+  .btn-primary {
+  @apply inline-flex items-center justify-center rounded-lg bg-sb-gold px-5 py-2.5 text-sm font-semibold text-sb-charcoal transition-all hover:bg-sb-gold-dark hover:shadow-md active:scale-95;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center rounded-lg border-2 border-sb-charcoal px-5 py-2.5 text-sm font-semibold text-sb-charcoal transition-all hover:bg-sb-charcoal hover:text-sb-cream active:scale-95;
+}
+
+  .card-product {
+    @apply overflow-hidden rounded-xl bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
+  }
+
+  .section-container {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+}
