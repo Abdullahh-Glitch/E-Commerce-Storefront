@@ -26,8 +26,8 @@ const env = {
     'SB',
 
   heroImage:
-    import.meta.env.VITE_HERO_IMAGE ||
-    'https://images.unsplash.com/photo-1585747860715-2b37bef7ca8b?w=1600&h=600&fit=crop',
+    // import.meta.env.VITE_HERO_IMAGE ||
+    'https://bigg.cz/uploads/2023/06/buddyapavlik_hair_cosmetics_for_man_019be4eb-65c5-43c3-b8d7-a4d9402495a1.jpg',
 
   contactEmail:
     import.meta.env.VITE_CONTACT_EMAIL ||

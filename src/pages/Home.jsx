@@ -17,6 +17,7 @@ export default function Home() {
     queryKey: ["categories"],
     queryFn: fetchCategories,
   });
+
   const { data: brandsData } = useQuery({
     queryKey: ["brands"],
     queryFn: fetchBrands,
@@ -24,11 +25,18 @@ export default function Home() {
 
   const filterCategories = [
     { id: "all", label: "All" },
-    ...(categoriesData?.map((c) => ({ id: c.slug, label: c.label })) ?? []),
+    ...(categoriesData?.map((c) => ({
+      id: c.slug,
+      label: c.label,
+    })) ?? []),
   ];
+
   const filterBrands = [
     { id: "all", label: "All Brands" },
-    ...(brandsData?.map((b) => ({ id: b.name, label: b.name })) ?? []),
+    ...(brandsData?.map((b) => ({
+      id: b.name,
+      label: b.name,
+    })) ?? []),
   ];
 
   const {
@@ -63,143 +71,237 @@ export default function Home() {
   };
 
   const handleCategorySelect = (categorySlug) => {
-  setActiveCategory(categorySlug);
+    setActiveCategory(categorySlug);
 
-  document.getElementById("products")?.scrollIntoView({
-    behavior: "smooth",
-    block: "start",
-  });
-};
+    document.getElementById("products")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
 
   return (
-    <>
-      <section className="relative overflow-hidden bg-sb-charcoal">
-  {/* Logo watermark */}
-  <div className="pointer-events-none absolute inset-0 flex items-center justify-center translate-y-8 lg:translate-y-10">
-    <img
-      src={env.heroImage}
-      alt=""
-      className="h-[100%] w-[100%] scale-125 object-contain opacity-[0.07] sm:scale-125 lg:scale-160"
-    />
-  </div>
-
-  {/* Subtle overlay */}
-  <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-sb-charcoal/10 via-transparent to-sb-charcoal/30" />
-
-  {/* Content */}
-  <div className="relative mx-auto w-full px-3 sm:px-4 lg:px-6">
-    <div className="flex min-h-[500px] items-center justify-center py-14 sm:min-h-[540px] sm:py-16 lg:min-h-[560px] lg:py-20">
-      <div className="max-w-3xl text-center">
-        <div className="mb-5 flex items-center justify-center gap-3">
-          <span className="h-px w-8 bg-sb-gold" />
-
-          <p className="text-xs font-semibold tracking-[0.25em] text-sb-gold uppercase sm:text-sm">
-            {env.siteSubtitle}
-          </p>
-
-          <span className="h-px w-8 bg-sb-gold" />
+    <main>
+      {/* Premium hero */}
+      <section className="relative isolate overflow-hidden bg-sb-charcoal text-sb-cream">
+        <div className="absolute inset-0 -z-20">
+          <img
+            src={env.heroImage}
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full object-cover opacity-20"
+          />
         </div>
 
-        <h1 className="font-display text-4xl font-bold leading-tight text-sb-cream sm:text-5xl lg:text-6xl xl:text-7xl">
-          {env.siteTitle}
-        </h1>
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-sb-charcoal via-sb-charcoal/95 to-sb-charcoal/65" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-sb-charcoal/70 via-transparent to-sb-charcoal/20" />
 
-        <p className="mt-4 font-display text-xl text-sb-gold sm:text-2xl">
-          {env.siteTagline}
-        </p>
+        <div className="section-container">
+          <div className="grid min-h-[420px] items-center gap-8 py-10 sm:min-h-[460px] sm:py-12 lg:min-h-[480px] lg:grid-cols-[1.1fr_0.9fr] lg:gap-10 lg:py-14">
+            <div className="max-w-2xl">
+              <div className="mb-7 flex items-center gap-3">
+                <span className="h-px w-10 bg-sb-gold" />
+                <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-sb-gold sm:text-xs">
+                  {env.siteSubtitle}
+                </p>
+              </div>
 
-        <p className="mx-auto mt-6 max-w-2xl text-sm leading-7 text-sb-cream/65 sm:text-base sm:leading-8">
-          Born in the chair at {env.siteTitle} Barbershop, our {env.siteSubtitle}
-          line brings professional-grade shampoos, waxes, creams, and keratin
-          treatments straight from the shop to your home.
-        </p>
+              <h1 className="font-display text-4xl font-medium leading-[1.08] tracking-tight text-sb-cream sm:text-5xl lg:text-6xl xl:text-7xl">
+                {env.siteTitle}
+                <span className="mt-2 block italic text-sb-gold">
+                  {env.siteTagline}
+                </span>
+              </h1>
 
-        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <a
-            href="#products"
-            className="btn-primary w-full sm:w-auto"
-          >
-            Shop Collection
-          </a>
+              <p className="mt-7 max-w-xl text-sm leading-7 text-sb-cream/70 sm:text-base sm:leading-8">
+                Born in the barber's chair, made for your everyday routine.
+                Discover professional grooming essentials selected to help you
+                look sharp and feel confident, wherever the day takes you.
+              </p>
 
-          <a
-            href="#categories"
-            className="inline-flex w-full items-center justify-center rounded-lg border border-sb-cream/20 px-6 py-3 text-sm font-semibold text-sb-cream transition-colors hover:border-sb-gold hover:text-sb-gold sm:w-auto"
-          >
-            Explore Categories
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <a
+                  href="#products"
+                  className="btn-primary min-h-12 w-full px-7 sm:w-auto"
+                >
+                  Shop the Collection
+                  <span aria-hidden="true" className="ml-3 text-lg">
+                    →
+                  </span>
+                </a>
 
-<CategoryShowcase
-  categories={categoriesData}
-  onCategorySelect={handleCategorySelect}
-/>
+                <a
+                  href="#categories"
+                  className="inline-flex min-h-12 w-full items-center justify-center border border-sb-cream/25 px-7 text-sm font-medium text-sb-cream transition-colors duration-300 hover:border-sb-gold hover:text-sb-gold sm:w-auto"
+                >
+                  Explore Categories
+                </a>
+              </div>
 
-      <section id="products" className="section-container py-14 sm:py-16 lg:py-20">
-  <div className="mx-auto max-w-2xl text-center">
-    <p className="text-xs font-semibold tracking-[0.25em] text-sb-gold uppercase">
-      From the Barbershop
-    </p>
+              <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-sb-cream/15 pt-6">
+                <div>
+                  <p className="font-display text-xl text-sb-gold">01</p>
+                  <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-sb-cream/55">
+                    Professional Care
+                  </p>
+                </div>
 
-    <h2 className="mt-3 font-display text-3xl font-bold text-sb-charcoal sm:text-4xl lg:text-5xl">
-      Our Products
-    </h2>
+                <span className="hidden h-9 w-px bg-sb-cream/15 sm:block" />
 
-    <p className="mt-4 text-sm leading-6 text-sb-brown/70 sm:text-base">
-      Professional grooming essentials selected for your everyday routine.
-    </p>
-  </div>
+                <div>
+                  <p className="font-display text-xl text-sb-gold">02</p>
+                  <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-sb-cream/55">
+                    Everyday Essentials
+                  </p>
+                </div>
 
-  <div className="mt-10 sm:mt-12">
-        <ProductFilters
-          search={search}
-          onSearchChange={setSearch}
-          activeCategory={activeCategory}
-          onCategoryChange={setActiveCategory}
-          activeBrand={activeBrand}
-          onBrandChange={setActiveBrand}
-          onClearAll={clearAllFilters}
-          resultCount={totalCount}
-          categories={filterCategories}
-          brands={filterBrands}
-        />
-        </div>
+                <span className="hidden h-9 w-px bg-sb-cream/15 sm:block" />
 
-        {isLoading ? (
-          <div className="flex justify-center py-16">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-sb-gold border-t-transparent" />
+                <div>
+                  <p className="font-display text-xl text-sb-gold">03</p>
+                  <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-sb-cream/55">
+                    Refined Grooming
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative mx-auto mt-8 block w-full max-w-sm sm:max-w-md lg:mt-0 lg:block">
+              <div className="absolute -inset-5 border border-sb-gold/25" />
+
+              <div className="relative aspect-[4/5] overflow-hidden bg-sb-brown">
+                <img
+                  src={env.heroImage}
+                  alt={`${env.siteTitle} grooming collection`}
+                  className="h-full w-full object-cover opacity-90"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-sb-charcoal/90 via-transparent to-sb-charcoal/10" />
+
+                <div className="absolute bottom-0 left-0 right-0 p-7 xl:p-9">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-sb-gold">
+                    The Grooming Edit
+                  </p>
+
+                  <p className="mt-3 max-w-xs font-display text-3xl leading-tight text-sb-cream xl:text-4xl">
+                    Your routine.
+                    <span className="block italic text-sb-gold">
+                      Refined.
+                    </span>
+                  </p>
+
+                  <a
+                    href="#products"
+                    className="mt-5 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.15em] text-sb-cream transition-colors hover:text-sb-gold"
+                  >
+                    Discover the collection
+                    <span aria-hidden="true">→</span>
+                  </a>
+                </div>
+              </div>
+
+              <div className="absolute -bottom-8 -right-8 hidden h-28 w-28 items-center justify-center rounded-full border border-sb-gold/40 bg-sb-charcoal text-center sm:flex">
+                <div>
+                  <p className="font-display text-2xl italic text-sb-gold">
+                    SB
+                  </p>
+                  <p className="mt-1 text-[8px] uppercase tracking-[0.15em] text-sb-cream/70">
+                    Since the Chair
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-        ) : isError ? (
-          <div className="py-16 text-center">
-            <p className="text-lg text-red-600">
-              Failed to load products. Is the backend running?
-            </p>
-            <p className="mt-2 text-sm text-sb-brown/60">
-              Start the API with: cd bec && npm run dev
-            </p>
-          </div>
-        ) : (
-          <>
-            <ProductGrid
-              products={products}
-              hasActiveFilters={
-                search !== "" ||
-                activeCategory !== "all" ||
-                activeBrand !== "all"
-              }
-            />
-            <InfiniteScrollSentinel
-              onLoadMore={fetchNextPage}
-              hasMore={hasNextPage}
-              isLoading={isFetchingNextPage}
-            />
-          </>
-        )}
+        </div>
       </section>
-    </>
+
+      {/* Category collection */}
+      <CategoryShowcase
+        categories={categoriesData}
+        onCategorySelect={handleCategorySelect}
+      />
+
+      {/* Products */}
+      <section
+        id="products"
+        className="scroll-mt-24 bg-sb-cream py-16 sm:py-20 lg:py-24"
+      >
+        <div className="section-container">
+          <div className="flex flex-col gap-5 border-b border-sb-brown/15 pb-8 sm:flex-row sm:items-end sm:justify-between sm:pb-10">
+            <div className="max-w-2xl">
+              <div className="mb-4 flex items-center gap-3">
+                <span className="h-px w-8 bg-sb-gold" />
+                <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-sb-gold sm:text-xs">
+                  From the Barbershop
+                </p>
+              </div>
+
+              <h2 className="font-display text-4xl font-medium tracking-tight text-sb-charcoal sm:text-5xl lg:text-6xl">
+                The Collection
+              </h2>
+
+              <p className="mt-4 max-w-xl text-sm leading-7 text-sb-brown/70 sm:text-base">
+                Professional grooming essentials, thoughtfully selected for
+                your daily routine.
+              </p>
+            </div>
+
+            <p className="text-xs font-medium uppercase tracking-[0.14em] text-sb-brown/60">
+              {totalCount} {totalCount === 1 ? "Product" : "Products"}
+            </p>
+          </div>
+
+          <div className="py-8 sm:py-10">
+            <ProductFilters
+              search={search}
+              onSearchChange={setSearch}
+              activeCategory={activeCategory}
+              onCategoryChange={setActiveCategory}
+              activeBrand={activeBrand}
+              onBrandChange={setActiveBrand}
+              onClearAll={clearAllFilters}
+              resultCount={totalCount}
+              categories={filterCategories}
+              brands={filterBrands}
+            />
+          </div>
+
+          {isLoading ? (
+            <div className="flex justify-center py-20">
+              <div
+                role="status"
+                aria-label="Loading products"
+                className="h-9 w-9 animate-spin rounded-full border-2 border-sb-gold/30 border-t-sb-gold"
+              />
+            </div>
+          ) : isError ? (
+            <div className="border border-red-200 bg-white px-5 py-12 text-center">
+              <p className="text-base font-medium text-red-700">
+                We couldn't load the collection.
+              </p>
+              <p className="mt-2 text-sm text-sb-brown/60">
+                Please check your connection and try again.
+              </p>
+            </div>
+          ) : (
+            <>
+              <ProductGrid
+                products={products}
+                hasActiveFilters={
+                  search !== "" ||
+                  activeCategory !== "all" ||
+                  activeBrand !== "all"
+                }
+              />
+
+              <InfiniteScrollSentinel
+                onLoadMore={fetchNextPage}
+                hasMore={hasNextPage}
+                isLoading={isFetchingNextPage}
+              />
+            </>
+          )}
+        </div>
+      </section>
+    </main>
   );
 }

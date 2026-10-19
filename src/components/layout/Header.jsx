@@ -1,8 +1,37 @@
+
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectCartItemCount } from '../../store/cartSlice'
 import env from '../../config/env'
+
+const navLinks = [
+  { to: '/', label: 'Home', end: true },
+  { to: '/track-order', label: 'Track Order' },
+  { to: '/contact', label: 'Contact' },
+]
+
+function CartIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3 3h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"
+      />
+      <circle cx="10" cy="20" r="1.2" />
+      <circle cx="18" cy="20" r="1.2" />
+    </svg>
+  )
+}
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -11,110 +40,132 @@ export default function Header() {
   const closeMenu = () => setIsMenuOpen(false)
 
   const navLinkClass = ({ isActive }) =>
-    `text-sm font-medium tracking-wide transition-colors ${
+    `relative inline-flex h-full items-center text-[10px] font-semibold tracking-[0.14em] uppercase transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:bg-sb-gold after:transition-transform after:duration-300 ${
       isActive
-        ? 'text-sb-gold'
-        : 'text-sb-cream/80 hover:text-sb-gold'
+        ? 'text-sb-gold-dark after:scale-x-100'
+        : 'text-sb-charcoal/70 after:scale-x-0 hover:text-sb-gold-dark hover:after:scale-x-100'
     }`
 
   return (
-    <header className="sticky top-0 z-50 bg-sb-charcoal shadow-lg">
-      <div className="mx-auto w-full px-3 sm:px-4 lg:px-6">
-        <div className="flex h-16 items-center justify-between sm:h-20">
-          <Link to="/" className="flex items-center gap-3" onClick={closeMenu}>
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-sb-gold bg-sb-charcoal sm:h-12 sm:w-12">
-              <span className="font-display text-lg font-bold text-sb-gold sm:text-xl">
+    <header className="sticky top-0 z-50 w-full bg-white">
+      {/* Compact Announcement Strip */}
+      <div className="relative flex min-h-7 items-center justify-center bg-sb-charcoal px-4 py-1.5 text-center">
+        <p className="text-[9px] font-medium tracking-[0.16em] text-sb-cream/90 uppercase sm:text-[10px] sm:tracking-[0.2em]">
+          {env.siteTagline}
+        </p>
+        <span className="absolute inset-x-0 bottom-0 h-[2px] bg-sb-gold" />
+      </div>
+
+      {/* Main Header */}
+      <div className="w-full border-b border-sb-gold/20">
+        <div className="grid min-h-[64px] grid-cols-[1fr_auto] items-center gap-2 px-4 sm:px-7 lg:min-h-[70px] lg:grid-cols-[1fr_auto_1fr] lg:px-10 xl:px-14">
+          {/* Brand */}
+          <Link
+            to="/"
+            onClick={closeMenu}
+            aria-label={`${env.siteTitle} home`}
+            className="group flex min-w-0 items-center justify-self-start gap-2 sm:gap-2.5"
+          >
+            <span className="relative flex h-9 w-9 shrink-0 items-center justify-center bg-sb-charcoal transition-colors duration-300 group-hover:bg-sb-brown sm:h-10 sm:w-10">
+              <span className="absolute inset-1 border border-sb-gold/70" />
+              <span className="relative font-display text-sm font-semibold text-sb-gold sm:text-base">
                 {env.logoText}
               </span>
-            </div>
+            </span>
 
-            <div className="hidden sm:block">
-              <p className="font-display text-lg font-bold leading-tight text-sb-cream">
+            <span className="min-w-0">
+              <span className="block truncate font-display text-sm font-semibold leading-tight text-sb-charcoal sm:text-base lg:text-lg">
                 {env.siteTitle}
-              </p>
-              <p className="text-xs tracking-widest text-sb-gold uppercase">
+              </span>
+              <span className="mt-0.5 block truncate text-[8px] font-semibold tracking-[0.14em] text-sb-brown/70 uppercase sm:text-[9px]">
                 {env.siteSubtitle}
-              </p>
-            </div>
+              </span>
+            </span>
           </Link>
 
-          <div className="flex items-center gap-3 sm:gap-6">
-            <nav className="hidden items-center gap-6 md:flex">
-              <NavLink to="/" end className={navLinkClass}>
-                Shop
+          {/* Desktop Navigation */}
+          <nav
+            aria-label="Main navigation"
+            className="hidden h-full items-center gap-6 lg:flex xl:gap-9"
+          >
+            {navLinks.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                className={navLinkClass}
+              >
+                {item.label}
               </NavLink>
+            ))}
+          </nav>
 
-              <NavLink to="/track-order" className={navLinkClass}>
-                Track
-              </NavLink>
-
-              <NavLink to="/contact" className={navLinkClass}>
-                Contact
-              </NavLink>
-            </nav>
-
+          {/* Cart and Future Action */}
+          <div className="flex items-center justify-self-end gap-1.5 sm:gap-2.5">
             <Link
               to="/cart"
-              className="relative rounded-lg p-2 text-sb-cream/80 transition-colors hover:bg-sb-cream/5 hover:text-sb-gold"
-              aria-label={`Cart${cartCount > 0 ? `, ${cartCount} items` : ''}`}
+              onClick={closeMenu}
+              aria-label={`Shopping cart${cartCount > 0 ? `, ${cartCount} items` : ''}`}
+              className="relative flex h-9 w-9 items-center justify-center text-sb-charcoal transition-colors hover:text-sb-gold-dark"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"
-                />
-              </svg>
+              <CartIcon />
 
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-sb-gold px-1 text-xs font-bold text-sb-charcoal">
-                  {cartCount}
+                <span className="absolute right-0 top-0 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-sb-gold px-1 text-[9px] font-bold text-sb-charcoal ring-2 ring-white">
+                  {cartCount > 99 ? '99+' : cartCount}
                 </span>
               )}
             </Link>
 
+            {/* Future Action */}
+            <button
+              type="button"
+              disabled
+              title="We can configure this action later"
+              className="hidden h-9 items-center justify-center border border-sb-gold bg-sb-gold px-3.5 text-[9px] font-bold tracking-[0.1em] text-sb-charcoal uppercase transition-colors hover:bg-sb-gold-dark lg:inline-flex xl:px-4"
+            >
+              Discover More
+            </button>
+
+            {/* Mobile Menu Toggle */}
             <button
               type="button"
               onClick={() => setIsMenuOpen((open) => !open)}
-              className="rounded-lg p-2 text-sb-cream/80 transition-colors hover:bg-sb-cream/5 hover:text-sb-gold md:hidden"
+              className="flex h-9 w-9 items-center justify-center text-sb-charcoal transition-colors hover:text-sb-gold-dark lg:hidden"
               aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMenuOpen}
+              aria-controls="mobile-navigation"
             >
               {isMenuOpen ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
+                  className="h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  strokeWidth={2}
+                  strokeWidth={1.7}
+                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M6 6l12 12M6 18L18 6"
+                    d="m6 6 12 12M18 6 6 18"
                   />
                 </svg>
               ) : (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
+                  className="h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  strokeWidth={2}
+                  strokeWidth={1.7}
+                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M4 6h16M4 12h16M4 18h16"
+                    d="M4 7h16M4 12h16M4 17h16"
                   />
                 </svg>
               )}
@@ -122,51 +173,44 @@ export default function Header() {
           </div>
         </div>
 
+        {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav className="border-t border-sb-cream/10 py-4 md:hidden">
-            <div className="flex flex-col gap-1">
-              <NavLink
-                to="/"
-                end
-                className={({ isActive }) =>
-                  `rounded-lg px-3 py-3 text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-sb-gold/10 text-sb-gold'
-                      : 'text-sb-cream/80 hover:bg-sb-cream/5 hover:text-sb-gold'
-                  }`
-                }
-                onClick={closeMenu}
-              >
-                Shop
-              </NavLink>
+          <nav
+            id="mobile-navigation"
+            aria-label="Mobile navigation"
+            className="border-t border-sb-gold/20 bg-white px-4 pb-3 pt-2 sm:px-7 lg:hidden"
+          >
+            <div className="flex flex-col">
+              {navLinks.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.end}
+                  onClick={closeMenu}
+                  className={({ isActive }) =>
+                    `border-b border-sb-charcoal/5 px-2 py-3 text-[11px] font-semibold tracking-[0.12em] uppercase transition-colors ${
+                      isActive
+                        ? 'text-sb-gold-dark'
+                        : 'text-sb-charcoal/75 hover:text-sb-gold-dark'
+                    }`
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
 
-              <NavLink
-                to="/track-order"
-                className={({ isActive }) =>
-                  `rounded-lg px-3 py-3 text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-sb-gold/10 text-sb-gold'
-                      : 'text-sb-cream/80 hover:bg-sb-cream/5 hover:text-sb-gold'
-                  }`
-                }
+              <Link
+                to="/cart"
                 onClick={closeMenu}
+                className="flex items-center justify-between px-2 py-3 text-[11px] font-semibold tracking-[0.12em] text-sb-charcoal uppercase"
               >
-                Track Order
-              </NavLink>
-
-              <NavLink
-                to="/contact"
-                className={({ isActive }) =>
-                  `rounded-lg px-3 py-3 text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-sb-gold/10 text-sb-gold'
-                      : 'text-sb-cream/80 hover:bg-sb-cream/5 hover:text-sb-gold'
-                  }`
-                }
-                onClick={closeMenu}
-              >
-                Contact
-              </NavLink>
+                Shopping Cart
+                {cartCount > 0 && (
+                  <span className="bg-sb-gold px-2 py-1 text-[9px] tracking-normal">
+                    {cartCount} {cartCount === 1 ? 'item' : 'items'}
+                  </span>
+                )}
+              </Link>
             </div>
           </nav>
         )}
